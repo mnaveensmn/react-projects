@@ -39,4 +39,3 @@
 **/*.tgz
 **/.yarn-integrity
 **/.env
-**/
