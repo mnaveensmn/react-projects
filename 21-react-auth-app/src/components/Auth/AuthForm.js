@@ -1,6 +1,6 @@
 import { useContext, useRef, useState } from 'react';
 import AuthContext from '../store/auth-context';
-
+import { useHistory } from "react-router-dom";
 import classes from './AuthForm.module.css';
 
 const AuthForm = () => {
@@ -8,6 +8,7 @@ const AuthForm = () => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
 
+  const history = useHistory();
   const authContext = useContext(AuthContext);
 
   const [isLogin, setIsLogin] = useState(true);
@@ -24,42 +25,48 @@ const AuthForm = () => {
     
     setIsLoading(true);
     let url;
-    if (isLogin){
-      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAN_PPZb4Okdytck_9ULWmi6ffW9N1vCGk';
+    if (isLogin) {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAN_PPZb4Okdytck_9ULWmi6ffW9N1vCGk";
     } else {
-      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAN_PPZb4Okdytck_9ULWmi6ffW9N1vCGk'
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAN_PPZb4Okdytck_9ULWmi6ffW9N1vCGk";
     }
-    fetch(
-      url,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          email: enteredEmail,
-          password: enteredPassword,
-          returnSecureToken: true,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    ).then(res=> {
-      setIsLoading(false);
-      if (res.ok) {
-        return res.json();
-      } else {
-        return res.json().then(data => {
-          let errorMessage = 'Authentication failed';
-          if ( data && data.error && data.error.message){
-            errorMessage = data.error.message;
-          }
-          throw new Error(errorMessage);
-        });
-      }
-    }).then(data => {
-      authContext.login(data.idToken);
-    }).catch(err => {
-      alert(err.message);
-    });
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        email: enteredEmail,
+        password: enteredPassword,
+        returnSecureToken: true,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        setIsLoading(false);
+        if (res.ok) {
+          return res.json();
+        } else {
+          return res.json().then((data) => {
+            let errorMessage = "Authentication failed";
+            if (data && data.error && data.error.message) {
+              errorMessage = data.error.message;
+            }
+            throw new Error(errorMessage);
+          });
+        }
+      })
+      .then((data) => {
+        const expirationTime = new Date(
+          new Date().getTime() + +data.expiresIn * 1000
+        );
+        authContext.login(data.idToken, expirationTime.toISOString());
+        history.replace("/");
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
   };
 
   return (
