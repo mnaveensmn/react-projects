@@ -39,3 +39,4 @@
 **/*.tgz
 **/.yarn-integrity
 **/.env
+**/.next
