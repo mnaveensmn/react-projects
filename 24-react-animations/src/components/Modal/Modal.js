@@ -10,7 +10,7 @@ const Modal = (props) => {
   return (
     <Transition
       mountOnEnter
-      unmountOnExit
+      unmountOnExitx
       in={props.show}
       timeout={animationTiming}
     >
