@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import Greeting from "./Greatings";
 import userEvent from '@testing-library/user-event'; 
+import Greeting from "./Greatings";
 
 describe('Greeting component', () => {
     test("renders Hello World as a test", () => {
