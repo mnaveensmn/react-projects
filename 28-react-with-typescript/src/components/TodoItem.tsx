@@ -1,14 +1,16 @@
 import React from 'react';
+import classes from './TodoItem.module.css';
 
 type Todo = {
-    todo: string;
-}
+  todo: string;
+  onRemoveTodo: () => void;
+};
 
 const TodoItem: React.FC<Todo> = (props) => {
     return (
-      <div>
-        <p>{props.todo}</p>
-      </div>
+      <li className={classes.item} onClick={props.onRemoveTodo}>
+        {props.todo}
+      </li>
     );
 }
 
