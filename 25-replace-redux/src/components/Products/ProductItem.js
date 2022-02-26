@@ -9,7 +9,6 @@ const ProductItem = props => {
   const dispatch = useStore(false)[1];
 
   const toggleFavHandler = () => {
-    //toggleFav(props.id);
     dispatch("TOGGLE_FAV", props.id);
   };
 
